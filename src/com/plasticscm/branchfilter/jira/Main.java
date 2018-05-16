@@ -11,9 +11,9 @@ import com.google.gson.GsonBuilder;
 public class Main {
     public static void main(String[] args) {
         try {
-            BranchInfo[] branches = readBranches();
+            Branch[] branches = readBranches();
 
-            BranchInfo[] filteredBranches = BranchFilter.filter(
+            Branch[] filteredBranches = BranchFilter.filter(
                 getJiraConfiguration(System.getenv()), branches);
 
             writeBranches(filteredBranches);
@@ -35,16 +35,16 @@ public class Main {
         return jiraConfiguration;
     }
     
-    private static void writeBranches(final BranchInfo[] branches){
+    private static void writeBranches(final Branch[] branches){
         Gson gson = new GsonBuilder().create();
         gson.toJson(branches, System.out);
     }
 
-    private static BranchInfo[] readBranches() throws IOException{
+    private static Branch[] readBranches() throws IOException{
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         try {
             Gson gson = new GsonBuilder().create();
-            return gson.fromJson(reader.readLine(), BranchInfo[].class);
+            return gson.fromJson(reader.readLine(), Branch[].class);
         } finally {
             reader.close();
         }

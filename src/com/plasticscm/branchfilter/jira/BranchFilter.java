@@ -5,22 +5,22 @@ import java.util.HashSet;
 import java.util.List;
 
 public class BranchFilter {
-    public static BranchInfo[] filter(
+    public static Branch[] filter(
         final JiraConfiguration configuration,
-        final BranchInfo[] branches) throws Exception {
+        final Branch[] branches) throws Exception {
 
             if (branches.length == 1) {
                 boolean isEnabled = isBranchEnabled(configuration, branches[0]); 
-                return isEnabled ? branches : new BranchInfo[0];
+                return isEnabled ? branches : new Branch[0];
             }
 
-            List<BranchInfo> openBranches = getOpenBranches(configuration, branches); 
-            return openBranches.toArray(new BranchInfo[openBranches.size()]);
+            List<Branch> openBranches = getOpenBranches(configuration, branches); 
+            return openBranches.toArray(new Branch[openBranches.size()]);
     }
 
-    private static List<BranchInfo> getOpenBranches(
+    private static List<Branch> getOpenBranches(
         final JiraConfiguration configuration,
-        final BranchInfo[] branches) throws Exception {
+        final Branch[] branches) throws Exception {
 
         IssueTrackerCommand issueTrackerCmd = new IssueTrackerCommand(
             IssueTrackerCommand.JIRA, configuration.User,
@@ -37,7 +37,7 @@ public class BranchFilter {
 
     private static boolean isBranchEnabled(
         final JiraConfiguration configuration,
-        final BranchInfo branchInfo) throws Exception {
+        final Branch branchInfo) throws Exception {
         int issueNumber = getJiraIssueNumber(
             branchInfo.getName(), configuration.BranchPrefix);
 
@@ -54,11 +54,11 @@ public class BranchFilter {
         return jiraIssueStatus.equals(configuration.ResolvedIssueStatus);
     }
 
-    private static ArrayList<BranchInfo> matchBranchesToJiraIssues(
-        final BranchInfo[] branches,
+    private static ArrayList<Branch> matchBranchesToJiraIssues(
+        final Branch[] branches,
         final ArrayList<String> jiraIssues,
         final String branchPrefix) {
-        ArrayList<BranchInfo> result = new ArrayList<BranchInfo>(jiraIssues.size());
+        ArrayList<Branch> result = new ArrayList<Branch>(jiraIssues.size());
 
         if (jiraIssues.size() == 0)
             return result;
@@ -67,7 +67,7 @@ public class BranchFilter {
         for (String jiraIssue : jiraIssues)
             namesToMatch.add(branchPrefix + jiraIssue);
 
-        for (BranchInfo branch : branches) {
+        for (Branch branch : branches) {
             String branchName = getSimpleBranchName(branch.getName());
             if (namesToMatch.contains(branchName)) {
                 result.add(branch);
